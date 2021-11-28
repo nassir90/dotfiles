@@ -12,8 +12,10 @@ SAVEHIST=10000
 setopt autocd
 bindkey -v
 bindkey '' history-incremental-pattern-search-backward
+PS1='%m %1d> '
 
 # Aliases
+alias .=source
 alias vi=nvim
 alias ls='ls --color=auto'
 alias ll='ls -l'

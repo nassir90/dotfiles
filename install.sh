@@ -2,5 +2,6 @@
 
 for file in .zprofile .vimrc .zshrc
 do
-	cp $file ~/$file
+        rm ~/$file
+	ln -s `pwd`/$file ~/$file
 done
