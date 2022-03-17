@@ -8,6 +8,8 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
+(setq backup-directory-alist '(("." . "~/.cache/emacs/saves/")))
+
 (add-to-list 'load-path "/home/naza/.config/emacs/tsv-mode.el")
 (autoload 'tsv-mode "tsv-mode" "A mode to edit table like file" t)
 (autoload 'tsv-normal-mode "tsv-mode" "A minor mode to edit table like file" t)
@@ -18,8 +20,17 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
+(defun pde-mode ()
+  "Basically java mode with some custom features"
+  (interactive)
+  (java-mode)
+  (setq indent-tabs-mode nil)
+  (setq standard-indent 2)
+  (setq tab-width 2))
+
+
 (add-to-list 'auto-mode-alist
-	     '("\\.pde\\'" . java-mode))
+	     '("\\.pde\\'" . pde-mode))
 
 (add-hook 'asm-mode-hook (lambda () (setq tab-width 2)))
 (global-set-key (kbd "C-x a b") 'add-csu-breakpoint)
@@ -82,7 +93,7 @@ Should fail if there is no file named .gdb in the current directory, so make it 
  '(custom-safe-themes
    '("c7000071e9302bee62fbe0072d53063da398887115ac27470d664f9859cdd41d" default))
  '(package-selected-packages
-   '(dracula-theme beacon evil ess helm-company helm json-mode)))
+   '(hippie-exp-ext hippie-namespace hippie-expand-slime multiple-cursors dracula-theme beacon evil ess helm-company helm json-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
