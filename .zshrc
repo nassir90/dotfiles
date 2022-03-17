@@ -31,7 +31,6 @@ alias fcd='cd "`ls -1 | fzf`"'
 alias at=alacritty-themes
 alias em='emacs -nw'
 alias vi=em
-alias cd="echo Stop using cd. Just type the directory name.; cd "
 
 # Functions
 
