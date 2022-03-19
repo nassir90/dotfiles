@@ -24,9 +24,8 @@
   "Basically java mode with some custom features"
   (interactive)
   (java-mode)
-  (setq indent-tabs-mode nil)
-  (setq standard-indent 2)
-  (setq tab-width 2))
+  (c-set-offset 'arglist-intro '+)
+  (setq c-basic-offset 2))
 
 
 (add-to-list 'auto-mode-alist
