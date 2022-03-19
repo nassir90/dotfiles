@@ -23,6 +23,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
+(package-refresh-contents)
 (package-install-selected-packages)
 
 '((require 'seq)
@@ -41,7 +42,7 @@
 (require 'helm-config)
 (helm-mode 1)
 
-(global-set-key (kbd "<C-return>") 'find-file-at-point)
+(global-set-key (kbd "C-c <return>") 'find-file-at-point)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
