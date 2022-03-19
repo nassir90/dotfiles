@@ -1,12 +1,12 @@
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-
-(if (display-graphic-p) (load-theme 'dracula t))
-
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3") ;; Possibly redundant
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
+
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+
+(if (display-graphic-p) (load-theme 'dracula t))
 
 (setq backup-directory-alist '(("." . "~/.cache/emacs/saves/")))
 
@@ -17,35 +17,55 @@
 (require 'helm-config)
 (helm-mode 1)
 
+(global-set-key (kbd "<C-return>") 'find-file-at-point)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 (defun pde-mode ()
   "Basically java mode with some custom features"
-  (interactive)
   (java-mode)
   (c-set-offset 'arglist-intro '+)
   (setq c-basic-offset 2))
 
+(add-to-list
+ 'auto-mode-alist
+ '("\\.pde\\'" . pde-mode))
 
-(add-to-list 'auto-mode-alist
-	     '("\\.pde\\'" . pde-mode))
+(add-hook
+ 'asm-mode-hook
+ (lambda ()
+   (setq tab-width 2)
+   (local-set-key (kbd "C-x a b") 'naza/add-csu-breakpoint)
+   (local-set-key (kbd "C-x a d") 'naza/remove-csu-breakpoint)))
 
-(add-hook 'asm-mode-hook (lambda () (setq tab-width 2)))
-(global-set-key (kbd "C-x a b") 'add-csu-breakpoint)
-(defun add-csu-breakpoint ()
+(setq csu-config-file-name ".gdb")
+
+(defun naza/current-file-and-line-number (delimiter &optional)
+  "Concatenates the current buffer name and the current line number"
+  (interactive)
+  (unless delimiter (setq delimiter ":"))
+  (concat (file-name-nondirectory buffer-file-name) delimiter (number-to-string (line-number-at-pos))))
+
+(defun naza/remove-csu-breakpoint ()
+  "Opens the file stored at csu-config-file-name and searches for any breakpoint there. If one is found, it's deleted."
+  (interactive)
+  (let ((current-file-and-line-number (naza/current-file-and-line-number)))
+    (shell-command (concat "sed -i -e '" current-file-and-line-number "/d' " csu-config-file-name))))
+
+(defun naza/add-csu-breakpoint ()
   "Add an entry in the format 'b 'FILENAME:LINUM' to the .gdb file int he current folder.
 Should fail if there is no file named .gdb in the current directory, so make it first."
   (interactive)
-  (let ((csu-config-file-name ".gdb")
-	(original-buffer-file-name buffer-file-name)
-	(original-line-number (line-number-at-pos)))
+  (let ((current-file-and-line-number (naza/current-file-and-line-number)))
     (with-temp-file csu-config-file-name      
       (insert-file-contents csu-config-file-name)
-      (insert (concat "b " (file-name-nondirectory original-buffer-file-name) ":" (number-to-string original-line-number)) "\n")
-      )
-    )
-  )
+      (insert current-file-and-line-number "\n"))))
+
+(defun naza/svn-modified-files ()
+  (defalias 'sh 'shell-command-to-string)
+  (if (member ".svn" (split-string (sh "ls -a")))
+      (split-string (sh "svn status | sed -e '/^[^M]/d' -e 's/^M\s*//'"))
+    (message (concat "You are not in an SVN directory: " (sh "echo -n `pwd`")))))
 
 (defun window-half-height ()
   (max 1 (/ (1- (window-height (selected-window))) 2)))
