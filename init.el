@@ -3,8 +3,32 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(beacon-mode t)
+ '(custom-safe-themes
+   '("c7000071e9302bee62fbe0072d53063da398887115ac27470d664f9859cdd41d" default))
+ '(package-selected-packages
+   '(hippie-exp-ext hippie-namespace hippie-expand-slime multiple-cursors dracula-theme beacon evil ess helm-company helm json-mode)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+
+(package-install-selected-packages)
+
+'((require 'seq)
+(seq-map
+ (lambda (s) (package-install (symbol-name s)))
+ package-selected-packages))
 
 (if (display-graphic-p) (load-theme 'dracula t))
 
@@ -102,23 +126,6 @@ Should fail if there is no file named .gdb in the current directory, so make it 
 (global-set-key (kbd "C-x <down>") 'windmove-down)
 (global-set-key (kbd "<right>") 'windmove-right)
 (global-set-key (kbd "C-x <right>") 'windmove-right)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(beacon-mode t)
- '(custom-safe-themes
-   '("c7000071e9302bee62fbe0072d53063da398887115ac27470d664f9859cdd41d" default))
- '(package-selected-packages
-   '(hippie-exp-ext hippie-namespace hippie-expand-slime multiple-cursors dracula-theme beacon evil ess helm-company helm json-mode)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
