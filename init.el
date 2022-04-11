@@ -11,8 +11,11 @@
  '(beacon-mode t)
  '(custom-safe-themes
    '("c7000071e9302bee62fbe0072d53063da398887115ac27470d664f9859cdd41d" default))
+ '(ede-project-directories
+   '("/home/naza/projects/python/wandb/subproject" "/home/naza/projects/python/wandb" "/media/projects/SpaceObjectVisualiser"))
+ '(inhibit-startup-screen t)
  '(package-selected-packages
-   '(hippie-exp-ext hippie-namespace hippie-expand-slime multiple-cursors dracula-theme beacon evil ess helm-company helm json-mode)))
+   '(ein package-lint-flymake flycheck rust-mode go-mode hippie-exp-ext hippie-namespace hippie-expand-slime multiple-cursors dracula-theme beacon evil ess helm-company helm json-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -20,29 +23,26 @@
  ;; If there is more than one, they won't work right.
  )
 
+(setq error-next-message-highlight t)
+(setq use-short-answers t)
+(setq scroll-margin 5)
+(setq scroll-conservatively 1)
+
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-
-(package-refresh-contents)
-(package-install-selected-packages)
-
-'((require 'seq)
-(seq-map
- (lambda (s) (package-install (symbol-name s)))
- package-selected-packages))
 
 (if (display-graphic-p) (load-theme 'dracula t))
 
 (setq backup-directory-alist '(("." . "~/.cache/emacs/saves/")))
 
-(add-to-list 'load-path "/home/naza/.config/emacs/tsv-mode.el")
-(autoload 'tsv-mode "tsv-mode" "A mode to edit table like file" t)
-(autoload 'tsv-normal-mode "tsv-mode" "A minor mode to edit table like file" t)
+(add-hook 'go-mode-hook (lambda () (setq tab-width 2)))
+(add-hook 'org-mode-hook (lambda () (local-set-key (kbd "C-c o") 'org-latex-export-to-pdf)))
 
 (require 'helm-config)
 (helm-mode 1)
 
-(global-set-key (kbd "C-c <return>") 'find-file-at-point)
+(global-set-key (kbd "C-c m c") 'mc/edit-lines)
+(global-set-key (kbd "C-c <return>") 'find-file-at-point) ; Forgot about this
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
@@ -50,7 +50,8 @@
   "Basically java mode with some custom features"
   (java-mode)
   (c-set-offset 'arglist-intro '+)
-  (setq c-basic-offset 2))
+  (setq c-basic-offset 2)
+  (setq tab-width 2))
 
 (add-to-list
  'auto-mode-alist
@@ -65,7 +66,7 @@
 
 (setq csu-config-file-name ".gdb")
 
-(defun naza/current-file-and-line-number (delimiter &optional)
+(defun naza/current-file-and-line-number (&optional delimiter)
   "Concatenates the current buffer name and the current line number"
   (interactive)
   (unless delimiter (setq delimiter ":"))
@@ -84,9 +85,10 @@ Should fail if there is no file named .gdb in the current directory, so make it 
   (let ((current-file-and-line-number (naza/current-file-and-line-number)))
     (with-temp-file csu-config-file-name      
       (insert-file-contents csu-config-file-name)
-      (insert current-file-and-line-number "\n"))))
+      (insert "b " current-file-and-line-number "\n"))))
 
 (defun naza/svn-modified-files ()
+  (interactive)
   (defalias 'sh 'shell-command-to-string)
   (if (member ".svn" (split-string (sh "ls -a")))
       (split-string (sh "svn status | sed -e '/^[^M]/d' -e 's/^M\s*//'"))
@@ -96,11 +98,14 @@ Should fail if there is no file named .gdb in the current directory, so make it 
   (max 1 (/ (1- (window-height (selected-window))) 2)))
 (defun scroll-up-half ()
   (interactive)
+
   (scroll-up (window-half-height)))
 (defun scroll-down-half ()
   (interactive)
   (scroll-down (window-half-height)))
 
+(global-set-key (kbd "M-n") 'next-error)
+(global-set-key (kbd "M-p") 'previous-error)
 (global-set-key (kbd "C-v") 'scroll-up-half)
 (global-set-key (kbd "M-v") 'scroll-down-half)
 
@@ -130,3 +135,7 @@ Should fail if there is no file named .gdb in the current directory, so make it 
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+
+(put 'scroll-left 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-region 'disabled nil)

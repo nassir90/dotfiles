@@ -2,6 +2,9 @@
 zstyle ':completion:*' completer _expand _complete _ignored
 zstyle :compinstall filename '$HOME/.zshrc'
 
+autoload select-word-style
+select-word-style bash
+
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
@@ -12,7 +15,7 @@ SAVEHIST=10000
 setopt autocd
 bindkey '' hgistory-incremental-pattern-search-backward
 bindkey -e
-PS1='%m %1d> '
+prompt='%m %1d> '
 
 # Aliases
 alias .=source
@@ -35,13 +38,13 @@ alias vi=em
 # Functions
 
 function zf {
-        selection="`fl`"
-        if [ -n "$selection" ]
-        then
-                file "$selection" | grep -q PDF \
-                        && zathura "$selection" \
-                        || echo "'$selection' is not a PDF"
-        fi
+    selection="`fl`"
+    if [ -n "$selection" ]
+    then
+        file "$selection" | grep -q PDF \
+            && zathura "$selection" \
+                || echo "'$selection' is not a PDF"
+    fi
 }
 
 # Variables
