@@ -12,9 +12,12 @@
    '("c7000071e9302bee62fbe0072d53063da398887115ac27470d664f9859cdd41d" default))
  '(ede-project-directories
    '("/home/naza/projects/python/wandb/subproject" "/home/naza/projects/python/wandb" "/media/projects/SpaceObjectVisualiser"))
+ '(helm-boring-file-regexp-list
+   '("#$" "~$" "\\.o$" "~$" "\\.bin$" "\\.lbin$" "\\.so$" "\\.a$" "\\.ln$" "\\.blg$" "\\.bbl$" "\\.elc$" "\\.lof$" "\\.glo$" "\\.idx$" "\\.lot$" "\\.svn\\(/\\|$\\)" "\\.hg\\(/\\|$\\)" "\\.git\\(/\\|$\\)" "\\.bzr\\(/\\|$\\)" "CVS\\(/\\|$\\)" "_darcs\\(/\\|$\\)" "_MTN\\(/\\|$\\)" "\\.fmt$" "\\.tfm$" "\\.class$" "\\.fas$" "\\.lib$" "\\.mem$" "\\.x86f$" "\\.sparcf$" "\\.dfsl$" "\\.pfsl$" "\\.d64fsl$" "\\.p64fsl$" "\\.lx64fsl$" "\\.lx32fsl$" "\\.dx64fsl$" "\\.dx32fsl$" "\\.fx64fsl$" "\\.fx32fsl$" "\\.sx64fsl$" "\\.sx32fsl$" "\\.wx64fsl$" "\\.wx32fsl$" "\\.fasl$" "\\.ufsl$" "\\.fsl$" "\\.dxl$" "\\.lo$" "\\.la$" "\\.gmo$" "\\.mo$" "\\.toc$" "\\.aux$" "\\.cp$" "\\.fn$" "\\.ky$" "\\.pg$" "\\.tp$" "\\.vr$" "\\.cps$" "\\.fns$" "\\.kys$" "\\.pgs$" "\\.tps$" "\\.vrs$" "\\.pyc$" "\\.pyo$"))
+ '(helm-ff-skip-boring-files t)
  '(inhibit-startup-screen t)
  '(package-selected-packages
-   '(cmake-mode elpy graphviz-dot-mode arduino-mode zzz-to-char lsp-java ejson-mode lsp-ui pianobar lsp-mode slime-company slime opencl-mode markdown-mode ein package-lint-flymake flycheck rust-mode go-mode hippie-exp-ext hippie-namespace hippie-expand-slime multiple-cursors dracula-theme beacon evil ess helm-company helm json-mode)))
+   '(vterm yaml-mode cmake-mode elpy graphviz-dot-mode arduino-mode zzz-to-char lsp-java ejson-mode lsp-ui pianobar lsp-mode slime-company slime opencl-mode markdown-mode ein package-lint-flymake flycheck rust-mode go-mode hippie-exp-ext hippie-namespace hippie-expand-slime multiple-cursors dracula-theme beacon evil ess helm-company helm json-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -49,7 +52,9 @@
 
 (defun org-mode-custom-settings ()
   (local-set-key (kbd "C-c o p") #'org-latex-export-to-pdf)
-  (local-set-key (kbd "C-c o h") #'org-html-export-to-html))
+  (local-set-key (kbd "C-c o h") #'org-html-export-to-html)
+  (visual-line-mode)
+  (setq org-image-actual-width nil))
 
 (add-hook 'org-mode-hook #'org-mode-custom-settings)
 
@@ -144,15 +149,11 @@ Should fail if there is no file named .gdb in the current directory, so make it 
   (dolist (elem key-alist)
     (local-set-key (kbd (cdr elem)) (car elem))))
 
-(defvar logic-keybindings '(((lambda () (interactive) (insert-char 8707 1 t)) . "C-c e")
-			    ((lambda () (interactive) (insert-char 8704 1 t)) . "C-c f")
-			    ((lambda () (interactive) (insert-char 8743 1 t)) . "C-c a")
-			    ((lambda () (interactive) (insert-char 8744 1 t)) . "C-c o")
-			    ((lambda () (interactive) (insert-char 923 1 t)) . "C-c l")
-			    ((lambda () (interactive) (insert-char 8594 1 t)) . "C-c r")
-			    ((lambda () (interactive) (insert-char 8596 1 t)) . "C-c b")
-			    ((lambda () (interactive) (insert-char 955 1 t)) . "C-c u")))
-(global-set-keys logic-keybindings)
+(defun generate-logic-keybindings ()
+  (let ((logic-symbols '((8707 . "C-c e") (8704 . "C-c f") (8743 . "C-c a") (8744 . "C-c o")
+			 (923 . "C-c l") (8594 . "C-c r") (8596 . "C-c b") (955 . "C-c u"))))
+    (mapcar #'(lambda (pair) `((lambda () (interactive) (insert-char ,(car pair) 1 t)) . ,(cdr pair))) logic-symbols)))
+(global-set-keys (generate-logic-keybindings))
 
 (defun custom-asm-mode-settings ()
   (setq tab-width 2)

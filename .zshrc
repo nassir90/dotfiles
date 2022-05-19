@@ -20,7 +20,8 @@ prompt='%m %1d> '
 
 # Aliases
 alias .=source
-alias r.='source ~/.zshrc'
+alias .z='source ~/.zshrc'
+alias .r='source ./install/setup.zsh'
 alias ls='ls --color=auto'
 alias ll='ls -l -I "*~"'
 alias la='ls -A'
@@ -28,11 +29,13 @@ alias l='ls -I "*~"'
 alias l1='ls -1 -I "*~"'
 alias grep='grep --color=auto'
 alias loffice=libreoffice
+alias pyrc='python3 -i ~/.config/pythonrc'
 alias py=python3
 alias at=alacritty-themes
 alias em='emacsclient'
 alias sb='sbcl --noinform --script'
 alias sbclr='rlwrap sbcl'
+alias another='alacritty &!'
 
 xdg-set-opener () {
         [ ! ${#*} -eq 2 ] && return
@@ -132,3 +135,4 @@ export Be="/media/blackboard-crawler/downloads/CSU11031-202122: Electronics and 
 
 export ROS_DOMAIN_ID=2
 source /opt/ros2/galactic/setup.zsh
+source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.zsh
