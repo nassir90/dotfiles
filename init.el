@@ -17,7 +17,7 @@
  '(helm-ff-skip-boring-files t)
  '(inhibit-startup-screen t)
  '(package-selected-packages
-   '(vterm yaml-mode cmake-mode elpy graphviz-dot-mode arduino-mode zzz-to-char lsp-java ejson-mode lsp-ui pianobar lsp-mode slime-company slime opencl-mode markdown-mode ein package-lint-flymake flycheck rust-mode go-mode hippie-exp-ext hippie-namespace hippie-expand-slime multiple-cursors dracula-theme beacon evil ess helm-company helm json-mode)))
+   '(lean-mode yasnippet-snippets yasnippet-lean vterm yaml-mode cmake-mode elpy graphviz-dot-mode arduino-mode zzz-to-char lsp-java ejson-mode lsp-ui pianobar lsp-mode slime-company slime opencl-mode markdown-mode ein package-lint-flymake flycheck rust-mode go-mode hippie-exp-ext hippie-namespace hippie-expand-slime multiple-cursors dracula-theme beacon evil ess helm-company helm json-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -44,6 +44,7 @@
 (load (expand-file-name "/usr/lib/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "sbcl")
 
+(add-hook 'lsp-mode-hook 'yas-minor-mode)
 (add-hook 'rust-mode-hook 'lsp)
 (add-hook 'c++-mode-hook 'lsp)
 (add-hook 'c-mode-hook 'lsp)
